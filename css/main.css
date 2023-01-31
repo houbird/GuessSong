@@ -1,5 +1,55 @@
+* {
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+
 body {
     background-color: #ffedf5;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.level-block {
+    width: 250px;
+    height: 50px;
+    display: flex;
+    margin-bottom: 1em;
+    background-color: #fff;
+    padding: 0.6em;
+    border-radius: 5em;
+    border: 1px solid #ddd;
+}
+
+.level-block .title {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #414141;
+    color: #fff;
+    /* border: 1px solid #ddd; */
+    border-radius: 50%;
+}
+
+.level-block .status {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.level-block .status.success {
+    color: #5862ff;
 }
 
 #canvas {
@@ -10,6 +60,11 @@ body {
     height: 100%;
     pointer-events: none;
     opacity: .2;
+    z-index: -1;
+}
+#canvas-firework{
+    background:#000;
+    display: none;
 }
 
 #container {
@@ -22,6 +77,12 @@ h1 {
 }
 
 /*Content*/
+#contentContainer {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    pointer-events: none;
+}
 #contentContainer p {}
 
 /*Question*/
@@ -29,19 +90,26 @@ h1 {
     margin-bottom: 20px;
 }
 
-.options {
+.options-block {
     display: flex;
     justify-content: space-between;
     width: 50%;
     margin: 0 auto;
+    flex-wrap: wrap;
 }
 
 .option {
     cursor: pointer;
     padding: 10px 20px;
+    margin-bottom: 1em;
     border: 1px solid gray;
-    border-radius: 5px;
+    border-radius: 5em;
     font-size: 18px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
 }
 
 .result {
@@ -56,12 +124,15 @@ h1 {
 
 #playButton {
     display: inline-block;
+    border: 7px solid #fff;
+    border-radius: 25em;
+    box-shadow: 7px 6px 3px #ddd;
 }
 
 #playImage {
     height: 200px;
     width: 200px;
-    transition: transform 0.5s linear;
+    animation: breathe 2s linear infinite alternate;
 }
 
 #playImage.rotate {
@@ -76,5 +147,15 @@ h1 {
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes breathe {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.05);
     }
 }

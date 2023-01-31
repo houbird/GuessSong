@@ -11,20 +11,23 @@ let level = 1;
 const questions = [{
     question: "什麼東西拿起來沉，放下卻輕？",
     options: ["氣球", "棉花", "石頭"],
-    audio: "media/sample-9s.mp3",
-    answer: "A"
+    audio: "media/sample-9s.mp3?v=1",
+    answer: "A",
+    answerCHT: "氣球"
 },
 {
     question: "什麼東西不能吃？",
     options: ["蘋果", "椅子", "香蕉"],
-    audio: "media/sample-9s.mp3",
-    answer: "A"
+    audio: "media/sample-9s.mp3?v=2",
+    answer: "B",
+    answerCHT: "椅子"
 },
 {
     question: "什麼東西不會哭？",
     options: ["孩子", "貓咪", "風車"],
-    audio: "media/sample-9s.mp3",
-    answer: "A"
+    audio: "media/sample-9s.mp3?v=3",
+    answer: "C",
+    answerCHT: "風車"
 }
 ];
 const totalLevels = questions.length;
@@ -34,8 +37,9 @@ const options = document.querySelectorAll('.option');
 var contentContainer = document.getElementById("contentContainer");
 var content = document.getElementById("content");
 var rows = ["Row 1", "Row 2", "Row 3", "Row 4"];
-var rows_end = ["Congratulations!!", "Row 2", "Row 3", "Row 4"];
+var rows_end = ["Congratulations!!", "ok 2", "ok 3", "ok 4"];
 var currentRow = 0;
+var currentRow_end = 0;
 
 // Contents
 function printContent() {
@@ -52,20 +56,51 @@ function printContent() {
         setTimeout(printContent, 2000);
     }
 }
+function printContent_end() {
+    let p = document.createElement("p");
+    p.innerHTML = rows_end[currentRow_end];
+    p.classList.add("animate__animated");
+    p.classList.add("animate__fadeIn");
+    contentContainer.append(p);
+
+    //content.innerHTML = rows[currentRow];
+    //contentContainer.classList.add("fade-in");
+    currentRow_end++;
+    if (currentRow_end < rows_end.length) {
+        setTimeout(printContent_end, 2000);
+    }
+}
+
+function printLevel(level) {
+    console.log(level);
+    let block = document.getElementById('level-'+level);
+    let status = block.getElementsByClassName('status')[0];
+    status.innerHTML = '《'+questions[level - 1].answerCHT+'》';
+    status.classList.add('success');
+}
 
 printContent();
 
 // Audio player
 playButton.addEventListener("click", function () {
     if (audioPlayer.paused) {
-        audioPlayer.play();
-        playImage.classList.add("rotate");
+        audioPlay();
     } else {
-        audioPlayer.pause();
-        playImage.classList.remove("rotate");
+        audioPause();
     }
 });
 
+function audioPlay() {
+    audioPlayer.play();
+    playImage.classList.add("rotate");
+}
+function audioPause() {
+    audioPlayer.pause();
+    playImage.classList.remove("rotate");
+}
+function changeAudio(file) {
+    audioPlayer.src = file;
+}
 
 // Question
 document.querySelector('.question').innerHTML = questions[level].question;
@@ -80,14 +115,19 @@ function checkAnswer(guess) {
         console.log(questions[level - 1]);
         if (guess === questions[level - 1].answer) {
             document.querySelector('.result').innerHTML = '答對了！';
+            printLevel(level);
             level++;
             displayQuestion();
+            audioPause();
         } else {
             document.querySelector('.result').innerHTML = '答錯了！';
         }
         console.log('level', level);
         if (level >= totalLevels + 1) {
             document.querySelector('.result').innerHTML = '恭喜你通過了所有關卡！';
+            document.getElementById('player').style.display='none';
+            document.getElementById('canvas-firework').style.display='block';
+            printContent_end();
         } else {
             //level++;
         }
@@ -104,7 +144,7 @@ function displayQuestion() {
 
     form += "<div class='question'>" + question.question + "</div>";
 
-    form += "<div class='options'>";
+    form += "<div class='options-block'>";
     for (let i = 0; i < options.length; i++) {
         form += "<div class='option' onclick='checkAnswer(\"" + String.fromCharCode(65 + i) + "\")'>" + options[i] + "</div>";
     }
@@ -112,16 +152,15 @@ function displayQuestion() {
 
     form += "";
     document.getElementById("game").innerHTML = form;
-}
-function changeAudio(file) {
-    audioPlayer.src = file;
+
+    changeAudio(question.audio);
 }
 
 
 displayQuestion();
 
 
-// Start Canvas
+// Start bbackground Canvas
 function startAnimation() {
     const CANVAS_WIDTH = window.innerWidth;
     const CANVAS_HEIGHT = window.innerHeight;
@@ -232,4 +271,131 @@ function startAnimation() {
 }
 startAnimation();
 window.addEventListener("resize", startAnimation);
-        // End Canvas
+        // End background Canvas
+
+
+        // Start canvas firework
+        window.addEventListener("resize", resizeCanvas, false);
+        window.addEventListener("DOMContentLoaded", onLoad, false);
+        
+        window.requestAnimationFrame = 
+            window.requestAnimationFrame       || 
+            window.webkitRequestAnimationFrame || 
+            window.mozRequestAnimationFrame    || 
+            window.oRequestAnimationFrame      || 
+            window.msRequestAnimationFrame     || 
+            function (callback) {
+                window.setTimeout(callback, 1000/60);
+            };
+        
+        var canvas_firework, ctx, w, h, particles = [], probability = 0.04,
+            xPoint, yPoint;
+        
+        
+        
+        
+        
+        function onLoad() {
+            canvas_firework = document.getElementById("canvas-firework");
+            ctx = canvas_firework.getContext("2d");
+            resizeCanvas();
+            
+            window.requestAnimationFrame(updateWorld);
+        } 
+        
+        function resizeCanvas() {
+            if (!!canvas_firework) {
+                w = canvas_firework.width = window.innerWidth;
+                h = canvas_firework.height = window.innerHeight;
+            }
+        } 
+        
+        function updateWorld() {
+            update();
+            paint();
+            window.requestAnimationFrame(updateWorld);
+        } 
+        
+        function update() {
+            if (particles.length < 500 && Math.random() < probability) {
+                createFirework();
+            }
+            var alive = [];
+            for (var i=0; i<particles.length; i++) {
+                if (particles[i].move()) {
+                    alive.push(particles[i]);
+                }
+            }
+            particles = alive;
+        } 
+        
+        function paint() {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = 'lighter';
+            for (var i=0; i<particles.length; i++) {
+                particles[i].draw(ctx);
+            }
+        } 
+        
+        function createFirework() {
+            xPoint = Math.random()*(w-200)+100;
+            yPoint = Math.random()*(h-200)+100;
+            var nFire = Math.random()*50+100;
+            var c = "rgb("+(~~(Math.random()*200+55))+","
+                 +(~~(Math.random()*200+55))+","+(~~(Math.random()*200+55))+")";
+            for (var i=0; i<nFire; i++) {
+                var particle = new Particle();
+                particle.color = c;
+                var vy = Math.sqrt(25-particle.vx*particle.vx);
+                if (Math.abs(particle.vy) > vy) {
+                    particle.vy = particle.vy>0 ? vy: -vy;
+                }
+                particles.push(particle);
+            }
+        } 
+        
+        function Particle() {
+            this.w = this.h = Math.random()*4+1;
+            
+            this.x = xPoint-this.w/2;
+            this.y = yPoint-this.h/2;
+            
+            this.vx = (Math.random()-0.5)*10;
+            this.vy = (Math.random()-0.5)*10;
+            
+            this.alpha = Math.random()*.5+.5;
+            
+            this.color;
+        } 
+        
+        Particle.prototype = {
+            gravity: 0.05,
+            move: function () {
+                this.x += this.vx;
+                this.vy += this.gravity;
+                this.y += this.vy;
+                this.alpha -= 0.01;
+                if (this.x <= -this.w || this.x >= screen.width ||
+                    this.y >= screen.height ||
+                    this.alpha <= 0) {
+                        return false;
+                }
+                return true;
+            },
+            draw: function (c) {
+                c.save();
+                c.beginPath();
+                
+                c.translate(this.x+this.w/2, this.y+this.h/2);
+                c.arc(0, 0, this.w, 0, Math.PI*2);
+                c.fillStyle = this.color;
+                c.globalAlpha = this.alpha;
+                
+                c.closePath();
+                c.fill();
+                c.restore();
+            }
+        } 
+        // END canvas firework

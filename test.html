@@ -8,74 +8,42 @@
     <title>Title</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animate.min.css">
-	
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap" rel="stylesheet">
 </head>
 <style>
-*{
-font-family: 'Noto Sans TC',  sans-serif;
-}
-.noselect{
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-.level-block{
-    width: 200px;
-    height: 50px;
-    display: flex;
-    margin-bottom: 1em;
-    background-color: #fff;
-    padding: 0.6em;
-    border-radius: 5em;
-    border: 1px solid #ddd;
-}
-.level-block .title{
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #414141;
-    color: #fff;
-    /* border: 1px solid #ddd; */
-    border-radius: 50%;
-}
-.level-block .status{
-    width: 100px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-.level-block .status.success{
-    color: #5862ff;
-}
 </style>
+
 <body>
     <div id="container">
         <h1>h1</h1>
 
         <canvas id="canvas" width="400" height="400"> </canvas>
+        <canvas id="canvas-firework" width="400" height="400"> </canvas>
         <div id="contentContainer">
             <p id="content"></p>
         </div>
         <div id="level">
             <div class="level-group">
-                <div id="level-1" class="level-block"><div class="title">1</div><div class="status success">完成</div></div>
-                <div id="level-2" class="level-block"><div class="title">2</div><div class="status">未完成</div></div>
-                <div id="level-3" class="level-block"><div class="title">3</div><div class="status">未完成</div></div>
+                <div id="level-1" class="level-block">
+                    <div class="title">1</div>
+                    <div class="status">未完成</div>
+                </div>
+                <div id="level-2" class="level-block">
+                    <div class="title">2</div>
+                    <div class="status">未完成</div>
+                </div>
+                <div id="level-3" class="level-block">
+                    <div class="title">3</div>
+                    <div class="status">未完成</div>
+                </div>
             </div>
         </div>
         <div id="game">
             <div class="question">什麼東西拿起來沉，放下卻輕？</div>
-            <div class="options">
+            <div class="options-block">
                 <div class="option" onclick="checkAnswer('A')">氣球</div>
                 <div class="option" onclick="checkAnswer('B')">棉花</div>
                 <div class="option" onclick="checkAnswer('C')">石頭</div>
@@ -83,7 +51,7 @@ font-family: 'Noto Sans TC',  sans-serif;
         </div>
         <div id="player">
             <div id="playButton">
-                <!-- <img id="playImage" src="image/cd.png"> -->
+                <img id="playImage" src="image/cd.png">
             </div>
             <audio id="audioPlayer" src="media/sample-9s.mp3" controls autoplay></audio>
         </div>
