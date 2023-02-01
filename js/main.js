@@ -8,9 +8,12 @@ var audioPlayer = document.getElementById("audioPlayer");
 var panel_1 = document.getElementById("panel-1");
 var panel_2 = document.getElementById("panel-2");
 
+var countTimer = 3;
+var timer;
+var level = 1;
+var buttonDisabled = false;
 
 //Questions
-let level = 1;
 const questions = [{
     question: "什麼東西拿起來沉，放下卻輕？",
     options: ["氣球", "棉花", "石頭"],
@@ -23,7 +26,7 @@ const questions = [{
     question: "什麼東西不能吃？",
     options: ["蘋果", "椅子", "香蕉"],
     audio: "media/red-scarf.mp3",
-    currentTime: 51,
+    currentTime: 51.5,
     answer: "B",
     answerCHT: "椅子"
 },
@@ -55,11 +58,12 @@ function printContent() {
     p.classList.add("animate__fadeIn");
     contentContainer.append(p);
 
-    //content.innerHTML = rows[currentRow];
-    //contentContainer.classList.add("fade-in");
     currentRow++;
     if (currentRow < rows.length) {
         setTimeout(printContent, 2000);
+    }
+    else{
+        buttonDisabled = false;
     }
 }
 function printContent_end() {
@@ -69,8 +73,6 @@ function printContent_end() {
     p.classList.add("animate__fadeIn");
     contentContainer.append(p);
 
-    //content.innerHTML = rows[currentRow];
-    //contentContainer.classList.add("fade-in");
     currentRow_end++;
     if (currentRow_end < rows_end.length) {
         setTimeout(printContent_end, 2000);
@@ -79,33 +81,40 @@ function printContent_end() {
 
 function printLevel(level) {
     console.log(level);
-    let block = document.getElementById('level-'+level);
+    let block = document.getElementById('level-' + level);
     let status = block.getElementsByClassName('status')[0];
-    status.innerHTML = '《'+questions[level - 1].answerCHT+'》';
+    status.innerHTML = '《' + questions[level - 1].answerCHT + '》';
     status.classList.add('success');
 }
 
 // Audio player
 // GO STEP
 playButton.addEventListener("click", function () {
-    if(isHidden(panel_1) && isHidden(panel_2)){ 
-        console.log('panel 1 hidden');
-        panel_1.style.display = 'block';
-        player.classList.add('ready');
-        printContent();
-    }
-    else if(!isHidden(panel_1) && isHidden(panel_2)){
-        panel_1.style.display = 'none';
-        panel_2.style.display = 'block';
-    }
-    else if(isHidden(panel_1) && !isHidden(panel_2)){
-        panel_1.style.display = 'none';
-        panel_2.style.display = 'block';
-        
-        if (audioPlayer.paused) {
-            audioPlay();
-        } else {
-            audioPause();
+    if(!buttonDisabled){
+        // Start to print content.
+        if (isHidden(panel_1) && isHidden(panel_2)) {
+            console.log('panel 1 hidden');
+            panel_1.style.display = 'block';
+            player.classList.add('ready');
+            printContent();
+            buttonDisabled = true;
+        }
+        // finish print, go question.
+        else if (!isHidden(panel_1) && isHidden(panel_2)) {
+            panel_1.style.display = 'none';
+            panel_2.style.display = 'block';
+            runTimer();
+        }
+        // In answer question, play/pause audio.
+        else if (isHidden(panel_1) && !isHidden(panel_2)) {
+            panel_1.style.display = 'none';
+            panel_2.style.display = 'block';
+    
+            if (audioPlayer.paused) {
+                audioPlay();
+            } else {
+                audioPause();
+            }
         }
     }
 });
@@ -113,6 +122,7 @@ playButton.addEventListener("click", function () {
 function audioPlay() {
     audioPlayer.play();
     playImage.classList.add("rotate");
+    document.getElementById('count_num').style.display = 'none';
 }
 function audioPause() {
     audioPlayer.pause();
@@ -125,6 +135,27 @@ function changeAudio(file, currentTime) {
 function isHidden(el) {
     return (el.offsetParent === null)
 }
+function endCountdown() {
+    console.log('countdown, play audio');
+    audioPlay();
+}
+
+function handleTimer() {
+    if (countTimer <= 0) {
+        clearInterval(timer);
+        endCountdown();
+        document.getElementById('count_num').style.display = 'none';
+    } else {
+        document.getElementById('count_num').innerHTML = countTimer;
+        countTimer--;
+    }
+}
+function runTimer() {
+    countTimer = 3;
+    document.getElementById('count_num').style.display = 'block';
+    handleTimer(countTimer);
+    timer = setInterval(function () { handleTimer(countTimer); }, 1000);
+}
 
 // Question
 document.querySelector('.question').innerHTML = questions[level].question;
@@ -133,11 +164,14 @@ options.forEach((option, index) => {
 });
 
 function checkAnswer(guess) {
+    let success = false;
     if (level < totalLevels + 1) {
         console.log('guess this question');
         console.log(questions[level - 1]);
-        if (guess === questions[level - 1].answer && level < totalLevels + 1) {
-            document.querySelector('.result').innerHTML = '答對了！';
+        if (guess === questions[level - 1].answer) {
+            let result=document.querySelector('.result');
+            result.innerHTML = '答對了！';
+            success = true;
             printLevel(level);
             level++;
             displayQuestion();
@@ -148,15 +182,20 @@ function checkAnswer(guess) {
 
     }
     if (level >= totalLevels + 1) {
-        document.querySelector('.result').innerHTML = '恭喜你通過了所有關卡！';
-        document.getElementById('player').style.display='none';
-        panel_1.style.display='block';
-        panel_2.style.display='none';
-        document.getElementById('canvas-firework').style.display='block';
-        contentContainer.innerHTML='';
+        //document.querySelector('.result').innerHTML = '恭喜你通過了所有關卡！';
+        document.querySelector('.result').innerHTML = '';
+        document.getElementById('player').style.display = 'none';
+        panel_1.style.display = 'block';
+        panel_2.style.display = 'none';
+        document.getElementById('canvas-firework').style.display = 'block';
+        contentContainer.innerHTML = '';
+        contentContainer.classList.add('end');
         printContent_end();
     } else {
-        audioPause();
+        if (success) {
+            audioPause();
+            runTimer();
+        }
     }
 }
 
@@ -296,131 +335,131 @@ function startAnimation() {
 }
 startAnimation();
 window.addEventListener("resize", startAnimation);
-        // End background Canvas
+// End background Canvas
 
 
-        // Start canvas firework
-        window.addEventListener("resize", resizeCanvas, false);
-        window.addEventListener("DOMContentLoaded", onLoad, false);
-        
-        window.requestAnimationFrame = 
-            window.requestAnimationFrame       || 
-            window.webkitRequestAnimationFrame || 
-            window.mozRequestAnimationFrame    || 
-            window.oRequestAnimationFrame      || 
-            window.msRequestAnimationFrame     || 
-            function (callback) {
-                window.setTimeout(callback, 1000/60);
-            };
-        
-        var canvas_firework, ctx, w, h, particles = [], probability = 0.04,
-            xPoint, yPoint;
-        
-        
-        
-        
-        
-        function onLoad() {
-            canvas_firework = document.getElementById("canvas-firework");
-            ctx = canvas_firework.getContext("2d");
-            resizeCanvas();
-            
-            window.requestAnimationFrame(updateWorld);
-        } 
-        
-        function resizeCanvas() {
-            if (!!canvas_firework) {
-                w = canvas_firework.width = window.innerWidth;
-                h = canvas_firework.height = window.innerHeight;
-            }
-        } 
-        
-        function updateWorld() {
-            update();
-            paint();
-            window.requestAnimationFrame(updateWorld);
-        } 
-        
-        function update() {
-            if (particles.length < 500 && Math.random() < probability) {
-                createFirework();
-            }
-            var alive = [];
-            for (var i=0; i<particles.length; i++) {
-                if (particles[i].move()) {
-                    alive.push(particles[i]);
-                }
-            }
-            particles = alive;
-        } 
-        
-        function paint() {
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = "rgba(0,0,0,0.2)";
-            ctx.fillRect(0, 0, w, h);
-            ctx.globalCompositeOperation = 'lighter';
-            for (var i=0; i<particles.length; i++) {
-                particles[i].draw(ctx);
-            }
-        } 
-        
-        function createFirework() {
-            xPoint = Math.random()*(w-200)+100;
-            yPoint = Math.random()*(h-200)+100;
-            var nFire = Math.random()*50+100;
-            var c = "rgb("+(~~(Math.random()*200+55))+","
-                 +(~~(Math.random()*200+55))+","+(~~(Math.random()*200+55))+")";
-            for (var i=0; i<nFire; i++) {
-                var particle = new Particle();
-                particle.color = c;
-                var vy = Math.sqrt(25-particle.vx*particle.vx);
-                if (Math.abs(particle.vy) > vy) {
-                    particle.vy = particle.vy>0 ? vy: -vy;
-                }
-                particles.push(particle);
-            }
-        } 
-        
-        function Particle() {
-            this.w = this.h = Math.random()*4+1;
-            
-            this.x = xPoint-this.w/2;
-            this.y = yPoint-this.h/2;
-            
-            this.vx = (Math.random()-0.5)*10;
-            this.vy = (Math.random()-0.5)*10;
-            
-            this.alpha = Math.random()*.5+.5;
-            
-            this.color;
-        } 
-        
-        Particle.prototype = {
-            gravity: 0.05,
-            move: function () {
-                this.x += this.vx;
-                this.vy += this.gravity;
-                this.y += this.vy;
-                this.alpha -= 0.01;
-                if (this.x <= -this.w || this.x >= screen.width ||
-                    this.y >= screen.height ||
-                    this.alpha <= 0) {
-                        return false;
-                }
-                return true;
-            },
-            draw: function (c) {
-                c.save();
-                c.beginPath();
-                
-                c.translate(this.x+this.w/2, this.y+this.h/2);
-                c.arc(0, 0, this.w, 0, Math.PI*2);
-                c.fillStyle = this.color;
-                c.globalAlpha = this.alpha;
-                
-                c.closePath();
-                c.fill();
-                c.restore();
-            }
-        } 
+// Start canvas firework
+window.addEventListener("resize", resizeCanvas, false);
+window.addEventListener("DOMContentLoaded", onLoad, false);
+
+window.requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
+
+var canvas_firework, ctx, w, h, particles = [], probability = 0.04,
+    xPoint, yPoint;
+
+
+
+
+
+function onLoad() {
+    canvas_firework = document.getElementById("canvas-firework");
+    ctx = canvas_firework.getContext("2d");
+    resizeCanvas();
+
+    window.requestAnimationFrame(updateWorld);
+}
+
+function resizeCanvas() {
+    if (!!canvas_firework) {
+        w = canvas_firework.width = window.innerWidth;
+        h = canvas_firework.height = window.innerHeight;
+    }
+}
+
+function updateWorld() {
+    update();
+    paint();
+    window.requestAnimationFrame(updateWorld);
+}
+
+function update() {
+    if (particles.length < 500 && Math.random() < probability) {
+        createFirework();
+    }
+    var alive = [];
+    for (var i = 0; i < particles.length; i++) {
+        if (particles[i].move()) {
+            alive.push(particles[i]);
+        }
+    }
+    particles = alive;
+}
+
+function paint() {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < particles.length; i++) {
+        particles[i].draw(ctx);
+    }
+}
+
+function createFirework() {
+    xPoint = Math.random() * (w - 200) + 100;
+    yPoint = Math.random() * (h - 200) + 100;
+    var nFire = Math.random() * 50 + 100;
+    var c = "rgb(" + (~~(Math.random() * 200 + 55)) + ","
+        + (~~(Math.random() * 200 + 55)) + "," + (~~(Math.random() * 200 + 55)) + ")";
+    for (var i = 0; i < nFire; i++) {
+        var particle = new Particle();
+        particle.color = c;
+        var vy = Math.sqrt(25 - particle.vx * particle.vx);
+        if (Math.abs(particle.vy) > vy) {
+            particle.vy = particle.vy > 0 ? vy : -vy;
+        }
+        particles.push(particle);
+    }
+}
+
+function Particle() {
+    this.w = this.h = Math.random() * 4 + 1;
+
+    this.x = xPoint - this.w / 2;
+    this.y = yPoint - this.h / 2;
+
+    this.vx = (Math.random() - 0.5) * 10;
+    this.vy = (Math.random() - 0.5) * 10;
+
+    this.alpha = Math.random() * .5 + .5;
+
+    this.color;
+}
+
+Particle.prototype = {
+    gravity: 0.05,
+    move: function () {
+        this.x += this.vx;
+        this.vy += this.gravity;
+        this.y += this.vy;
+        this.alpha -= 0.01;
+        if (this.x <= -this.w || this.x >= screen.width ||
+            this.y >= screen.height ||
+            this.alpha <= 0) {
+            return false;
+        }
+        return true;
+    },
+    draw: function (c) {
+        c.save();
+        c.beginPath();
+
+        c.translate(this.x + this.w / 2, this.y + this.h / 2);
+        c.arc(0, 0, this.w, 0, Math.PI * 2);
+        c.fillStyle = this.color;
+        c.globalAlpha = this.alpha;
+
+        c.closePath();
+        c.fill();
+        c.restore();
+    }
+}
         // END canvas firework

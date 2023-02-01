@@ -2,9 +2,10 @@
     font-family: 'Noto Sans TC', sans-serif;
 }
 
-html{
-    height:5000px
+html {
+    height: 5000px
 }
+
 body {
     background-color: #ffedf5;
     overflow: hidden;
@@ -19,8 +20,30 @@ body {
     user-select: none;
 }
 
-#panel-1{display: none;}
-#panel-2{display: none;}
+#panel-1 {
+    display: none;
+}
+
+#panel-2 {
+    display: none;
+}
+
+#count_num {
+    display: block;
+    font-size: 120px;
+    opacity: .5;
+    position: absolute;
+    top: 24%;
+    left: 50%;
+    transform: translate(-50%, -70%);
+}
+
+.level-group {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translate(10%, -10%);
+}
 
 .level-block {
     width: 250px;
@@ -31,6 +54,7 @@ body {
     padding: 0.6em;
     border-radius: 5em;
     border: 1px solid #ddd;
+    box-shadow: 5px 5px 3px #ddd;
 }
 
 .level-block .title {
@@ -69,12 +93,15 @@ body {
     z-index: -1;
     filter: blur(2px);
 }
-#canvas-firework{
-    background:#fff;
+
+#canvas-firework {
+    background: #fff;
+    mix-blend-mode: soft-light;
     display: none;
     position: absolute;
     left: 0;
     top: 0;
+    pointer-events: none;
 }
 
 #container {
@@ -88,14 +115,32 @@ h1 {
 
 /*Content*/
 #contentContainer {
-    padding: 280px 0px;
+    padding: 200px 0px 280px 0px;
     pointer-events: none;
 }
-#contentContainer p {
+#contentContainer.end {
+    padding: 0px; 
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
+#contentContainer p {
+    font-size: 24px;
+    font-style: italic;
+    color: #707070;
 }
 
 /*Question*/
+#game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%);
+    width: 100%;
+}
+
 .question {
     margin-bottom: 20px;
 }
@@ -112,6 +157,7 @@ h1 {
     cursor: pointer;
     padding: 10px 20px;
     margin-bottom: 1em;
+    background-color: #ffffff5e;
     border: 1px solid gray;
     border-radius: 5em;
     font-size: 18px;
@@ -124,20 +170,25 @@ h1 {
 
 .result {
     font-size: 24px;
-    margin-top: 20px;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /*Audio player*/
-#player{
+#player {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-#player.ready{
+
+#player.ready {
     transition: 1s;
     transform: translate(-50%, 70%);
 }
+
 #audioPlayer {
     display: none;
 }
@@ -153,13 +204,15 @@ h1 {
     height: 200px;
     width: 200px;
     animation: breathe 2s linear infinite alternate;
-    /*TBD remove*/
-    height:20px;width:20px;
 }
 
 #playImage.rotate {
     transform: rotate(360deg);
     animation: rotate 2s linear infinite;
+}
+
+.result.opacity {
+    animation: opacity 1s ease-out forwards;
 }
 
 @keyframes rotate {
@@ -179,5 +232,15 @@ h1 {
 
     to {
         transform: scale(1.05);
+    }
+}
+
+@keyframes opacity {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
     }
 }

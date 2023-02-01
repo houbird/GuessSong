@@ -19,6 +19,7 @@
 <body>
     <div id="container">
         <h1>h1</h1>
+        <span id="count_num"></span>
 
         <canvas id="canvas" width="400" height="400"></canvas>
         <canvas id="canvas-firework" width="400" height="400"></canvas>
@@ -31,6 +32,7 @@
         <div id="panel-2">
             <div id="level">
                 <div class="level-group">
+                    <div class="result"></div>
                     <div id="level-1" class="level-block">
                         <div class="title">1</div>
                         <div class="status">未完成</div>
@@ -55,7 +57,7 @@
             </div>
         </div>
         <div id="player">
-            <div id="playButton">
+            <div id="playButton" class="noselect">
                 <img id="playImage" src="image/cd.png">
             </div>
             <audio id="audioPlayer" src="media/sample-9s.mp3" controls autoplay></audio>
@@ -65,7 +67,6 @@
 
     </script>
 
-    <div class="result"></div>
 
     <script src="js/main.js"></script>
 </body>
