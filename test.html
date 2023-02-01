@@ -20,33 +20,38 @@
     <div id="container">
         <h1>h1</h1>
 
-        <canvas id="canvas" width="400" height="400"> </canvas>
-        <canvas id="canvas-firework" width="400" height="400"> </canvas>
-        <div id="contentContainer">
-            <p id="content"></p>
-        </div>
-        <div id="level">
-            <div class="level-group">
-                <div id="level-1" class="level-block">
-                    <div class="title">1</div>
-                    <div class="status">未完成</div>
-                </div>
-                <div id="level-2" class="level-block">
-                    <div class="title">2</div>
-                    <div class="status">未完成</div>
-                </div>
-                <div id="level-3" class="level-block">
-                    <div class="title">3</div>
-                    <div class="status">未完成</div>
-                </div>
+        <canvas id="canvas" width="400" height="400"></canvas>
+        <canvas id="canvas-firework" width="400" height="400"></canvas>
+
+        <div id="panel-1">
+            <div id="contentContainer">
+                <p id="content"></p>
             </div>
         </div>
-        <div id="game">
-            <div class="question">什麼東西拿起來沉，放下卻輕？</div>
-            <div class="options-block">
-                <div class="option" onclick="checkAnswer('A')">氣球</div>
-                <div class="option" onclick="checkAnswer('B')">棉花</div>
-                <div class="option" onclick="checkAnswer('C')">石頭</div>
+        <div id="panel-2">
+            <div id="level">
+                <div class="level-group">
+                    <div id="level-1" class="level-block">
+                        <div class="title">1</div>
+                        <div class="status">未完成</div>
+                    </div>
+                    <div id="level-2" class="level-block">
+                        <div class="title">2</div>
+                        <div class="status">未完成</div>
+                    </div>
+                    <div id="level-3" class="level-block">
+                        <div class="title">3</div>
+                        <div class="status">未完成</div>
+                    </div>
+                </div>
+            </div>
+            <div id="game">
+                <div class="question">什麼東西拿起來沉，放下卻輕？</div>
+                <div class="options-block">
+                    <div class="option" onclick="checkAnswer('A')">氣球</div>
+                    <div class="option" onclick="checkAnswer('B')">棉花</div>
+                    <div class="option" onclick="checkAnswer('C')">石頭</div>
+                </div>
             </div>
         </div>
         <div id="player">

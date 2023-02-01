@@ -4,6 +4,8 @@
 var playButton = document.getElementById("playButton");
 var playImage = document.getElementById("playImage");
 var audioPlayer = document.getElementById("audioPlayer");
+var panel_1 = document.getElementById("panel-1");
+var panel_2 = document.getElementById("panel-2");
 
 
 //Questions
@@ -83,6 +85,7 @@ printContent();
 
 // Audio player
 playButton.addEventListener("click", function () {
+    if(isHidden(panel_1)){ console.log('panel 1 hidden')}
     if (audioPlayer.paused) {
         audioPlay();
     } else {
@@ -101,13 +104,15 @@ function audioPause() {
 function changeAudio(file) {
     audioPlayer.src = file;
 }
+function isHidden(el) {
+    return (el.offsetParent === null)
+}
 
 // Question
 document.querySelector('.question').innerHTML = questions[level].question;
 options.forEach((option, index) => {
     option.innerHTML = questions[level].options[index];
 });
-
 
 function checkAnswer(guess) {
     if (level < totalLevels + 1) {

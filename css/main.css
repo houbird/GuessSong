@@ -2,7 +2,9 @@
     font-family: 'Noto Sans TC', sans-serif;
 }
 
-
+html{
+    height:5000px
+}
 body {
     background-color: #ffedf5;
 }
@@ -15,6 +17,9 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+
+#panel-1{display: none;}
+#panel-2{display: none;}
 
 .level-block {
     width: 250px;
@@ -133,6 +138,8 @@ h1 {
     height: 200px;
     width: 200px;
     animation: breathe 2s linear infinite alternate;
+    /*TBD remove*/
+    height:10px;width:10px;
 }
 
 #playImage.rotate {
