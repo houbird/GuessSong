@@ -1,6 +1,7 @@
 
 /// Parameters
 // Audio player
+var player = document.getElementById("player");
 var playButton = document.getElementById("playButton");
 var playImage = document.getElementById("playImage");
 var audioPlayer = document.getElementById("audioPlayer");
@@ -13,21 +14,24 @@ let level = 1;
 const questions = [{
     question: "什麼東西拿起來沉，放下卻輕？",
     options: ["氣球", "棉花", "石頭"],
-    audio: "media/sample-9s.mp3?v=1",
+    audio: "media/girl.mp3",
+    currentTime: 6,
     answer: "A",
     answerCHT: "氣球"
 },
 {
     question: "什麼東西不能吃？",
     options: ["蘋果", "椅子", "香蕉"],
-    audio: "media/sample-9s.mp3?v=2",
+    audio: "media/red-scarf.mp3",
+    currentTime: 51,
     answer: "B",
     answerCHT: "椅子"
 },
 {
     question: "什麼東西不會哭？",
     options: ["孩子", "貓咪", "風車"],
-    audio: "media/sample-9s.mp3?v=3",
+    audio: "media/marry-me.mp3",
+    currentTime: 0,
     answer: "C",
     answerCHT: "風車"
 }
@@ -81,15 +85,28 @@ function printLevel(level) {
     status.classList.add('success');
 }
 
-printContent();
-
 // Audio player
+// GO STEP
 playButton.addEventListener("click", function () {
-    if(isHidden(panel_1)){ console.log('panel 1 hidden')}
-    if (audioPlayer.paused) {
-        audioPlay();
-    } else {
-        audioPause();
+    if(isHidden(panel_1) && isHidden(panel_2)){ 
+        console.log('panel 1 hidden');
+        panel_1.style.display = 'block';
+        player.classList.add('ready');
+        printContent();
+    }
+    else if(!isHidden(panel_1) && isHidden(panel_2)){
+        panel_1.style.display = 'none';
+        panel_2.style.display = 'block';
+    }
+    else if(isHidden(panel_1) && !isHidden(panel_2)){
+        panel_1.style.display = 'none';
+        panel_2.style.display = 'block';
+        
+        if (audioPlayer.paused) {
+            audioPlay();
+        } else {
+            audioPause();
+        }
     }
 });
 
@@ -101,8 +118,9 @@ function audioPause() {
     audioPlayer.pause();
     playImage.classList.remove("rotate");
 }
-function changeAudio(file) {
+function changeAudio(file, currentTime) {
     audioPlayer.src = file;
+    audioPlayer.currentTime = currentTime;
 }
 function isHidden(el) {
     return (el.offsetParent === null)
@@ -118,25 +136,27 @@ function checkAnswer(guess) {
     if (level < totalLevels + 1) {
         console.log('guess this question');
         console.log(questions[level - 1]);
-        if (guess === questions[level - 1].answer) {
+        if (guess === questions[level - 1].answer && level < totalLevels + 1) {
             document.querySelector('.result').innerHTML = '答對了！';
             printLevel(level);
             level++;
             displayQuestion();
-            audioPause();
         } else {
             document.querySelector('.result').innerHTML = '答錯了！';
         }
         console.log('level', level);
-        if (level >= totalLevels + 1) {
-            document.querySelector('.result').innerHTML = '恭喜你通過了所有關卡！';
-            document.getElementById('player').style.display='none';
-            document.getElementById('canvas-firework').style.display='block';
-            printContent_end();
-        } else {
-            //level++;
-        }
 
+    }
+    if (level >= totalLevels + 1) {
+        document.querySelector('.result').innerHTML = '恭喜你通過了所有關卡！';
+        document.getElementById('player').style.display='none';
+        panel_1.style.display='block';
+        panel_2.style.display='none';
+        document.getElementById('canvas-firework').style.display='block';
+        contentContainer.innerHTML='';
+        printContent_end();
+    } else {
+        audioPause();
     }
 }
 
@@ -158,14 +178,14 @@ function displayQuestion() {
     form += "";
     document.getElementById("game").innerHTML = form;
 
-    changeAudio(question.audio);
+    changeAudio(question.audio, question.currentTime);
 }
 
 
 displayQuestion();
 
 
-// Start bbackground Canvas
+// Start background Canvas
 function startAnimation() {
     const CANVAS_WIDTH = window.innerWidth;
     const CANVAS_HEIGHT = window.innerHeight;
