@@ -42,11 +42,11 @@ body {
     position: absolute;
     bottom: 0;
     left: 0;
-    transform: translate(10%, -10%);
+    transform: translate(10%, -50%);
 }
 
 .level-block {
-    width: 250px;
+    width: 300px;
     height: 50px;
     display: flex;
     margin-bottom: 1em;
@@ -67,11 +67,16 @@ body {
     color: #fff;
     /* border: 1px solid #ddd; */
     border-radius: 50%;
+    font-size: 26px;
+    line-height: 1;
+    padding-left: 0.02em;
+    padding-bottom: 0.02em;
 }
 
 .level-block .status {
-    width: 150px;
+    width: 200px;
     height: 50px;
+    font-size: 26px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,7 +147,8 @@ h1 {
 }
 
 .question {
-    margin-bottom: 20px;
+    font-size: 30px;
+    margin-bottom: 1.2em;
 }
 
 .options-block {
@@ -156,11 +162,11 @@ h1 {
 .option {
     cursor: pointer;
     padding: 10px 20px;
-    margin-bottom: 1em;
+    margin-bottom: 0.7em;
     background-color: #ffffff5e;
     border: 1px solid gray;
     border-radius: 5em;
-    font-size: 18px;
+    font-size: 26px;
     display: flex;
     width: 100%;
     justify-content: center;
