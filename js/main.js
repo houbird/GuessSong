@@ -15,28 +15,28 @@ var buttonDisabled = false;
 
 //Questions
 const questions = [{
-    question: "什麼東西拿起來沉，放下卻輕？",
-    options: ["氣球", "棉花", "石頭"],
+    question: "接下來要撥放的歌曲是哪首歌？",
+    options: ["女孩", "還是會", "初四阿北"],
     audio: "media/girl.mp3",
     currentTime: 6,
     answer: "A",
-    answerCHT: "氣球"
+    answerCHT: "女孩"
 },
 {
-    question: "什麼東西不能吃？",
-    options: ["蘋果", "椅子", "香蕉"],
+    question: "接下來要撥放的歌曲是哪首歌？",
+    options: ["慢慢等", "如果可以", "在你身邊"],
     audio: "media/red-scarf.mp3",
     currentTime: 51.5,
     answer: "B",
-    answerCHT: "椅子"
+    answerCHT: "如果可以"
 },
 {
-    question: "什麼東西不會哭？",
-    options: ["孩子", "貓咪", "風車"],
+    question: "接下來要撥放的歌曲是哪首歌？",
+    options: ["因為愛", "世界上最重要的人", "請妳嫁給我"],
     audio: "media/marry-me.mp3",
     currentTime: 0,
     answer: "C",
-    answerCHT: "風車"
+    answerCHT: "請妳嫁給我"
 }
 ];
 const totalLevels = questions.length;
@@ -45,8 +45,8 @@ const options = document.querySelectorAll('.option');
 // Contents
 var contentContainer = document.getElementById("contentContainer");
 var content = document.getElementById("content");
-var rows = ["Row 1", "Row 2", "Row 3", "Row 4"];
-var rows_end = ["Congratulations!!", "ok 2", "ok 3", "ok 4"];
+var rows = ["恭喜你成功來到這裡", "這裡還有 1 個線索，必須破關後才能取得", "你必須依照你的智慧來通過下列 3 個關卡", "如果你準備好了，就按下面的CD圖示", "加油，勇敢的挑戰者"];
+var rows_end = ["勇敢的挑戰者", "恭喜你成功完成了挑戰", "下一個線索就在抽屜裡", "找到它，並前往下一個階段"];
 var currentRow = 0;
 var currentRow_end = 0;
 
@@ -62,7 +62,7 @@ function printContent() {
     if (currentRow < rows.length) {
         setTimeout(printContent, 2000);
     }
-    else{
+    else {
         buttonDisabled = false;
     }
 }
@@ -90,7 +90,7 @@ function printLevel(level) {
 // Audio player
 // GO STEP
 playButton.addEventListener("click", function () {
-    if(!buttonDisabled){
+    if (!buttonDisabled) {
         // Start to print content.
         if (isHidden(panel_1) && isHidden(panel_2)) {
             console.log('panel 1 hidden');
@@ -109,7 +109,7 @@ playButton.addEventListener("click", function () {
         else if (isHidden(panel_1) && !isHidden(panel_2)) {
             panel_1.style.display = 'none';
             panel_2.style.display = 'block';
-    
+
             if (audioPlayer.paused) {
                 audioPlay();
             } else {
@@ -131,6 +131,7 @@ function audioPause() {
 function changeAudio(file, currentTime) {
     audioPlayer.src = file;
     audioPlayer.currentTime = currentTime;
+    audioPlayer.loop = true;
 }
 function isHidden(el) {
     return (el.offsetParent === null)
@@ -169,7 +170,7 @@ function checkAnswer(guess) {
         console.log('guess this question');
         console.log(questions[level - 1]);
         if (guess === questions[level - 1].answer) {
-            let result=document.querySelector('.result');
+            let result = document.querySelector('.result');
             result.innerHTML = '答對了！';
             success = true;
             printLevel(level);

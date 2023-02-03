@@ -123,8 +123,9 @@ h1 {
     padding: 200px 0px 280px 0px;
     pointer-events: none;
 }
+
 #contentContainer.end {
-    padding: 0px; 
+    padding: 0px;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -237,7 +238,7 @@ h1 {
     }
 
     to {
-        transform: scale(1.05);
+        transform: scale(1.1);
     }
 }
 
