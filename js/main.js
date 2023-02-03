@@ -45,8 +45,8 @@ const options = document.querySelectorAll('.option');
 // Contents
 var contentContainer = document.getElementById("contentContainer");
 var content = document.getElementById("content");
-var rows = ["恭喜你成功來到這裡", "這裡還有 1 個線索，必須破關後才能取得", "你必須依照你的智慧來通過下列 3 個關卡", "如果你準備好了，就按下面的CD圖示", "加油，勇敢的挑戰者"];
-var rows_end = ["勇敢的挑戰者", "恭喜你成功完成了挑戰", "下一個線索就在抽屜裡", "找到它，並前往下一個階段"];
+var rows = ["恭喜你成功來到這裡", "這裡還有 1 個線索，必須破關後才能取得", "你必須依照你的智慧來通過下列 3 個關卡", "如果你準備好了，就按下面的CD圖示", "加油，勇敢的Nina！"];
+var rows_end = ["勇敢的Nina", "恭喜你成功完成了挑戰", "下一個線索就在抽屜裡", "找到它，並前往下一個階段"];
 var currentRow = 0;
 var currentRow_end = 0;
 

@@ -168,11 +168,15 @@ h1 {
     border: 1px solid gray;
     border-radius: 5em;
     font-size: 26px;
+    color: #404040;
     display: flex;
     width: 100%;
     justify-content: center;
     justify-items: center;
     align-items: center;
+}
+.option:hover {
+    background-color: #ffd8e9;
 }
 
 .result {
